@@ -36,13 +36,25 @@ app.get("/urls/:shortURL", (req, res) => {
   res.render("urls_show", templateVars);
 })
 
-app.post("/urls", (req, res) => {
-  console.log(req.body);
-  res.send("OK");
+app.get("/u/:shortURL", (req, res) => {
+  shortURL = req.params.shortURL;
+  console.log("longURL", urlDatabase[shortURL]);
+  if(urlDatabase.hasOwnProperty(shortURL)) {
+    let longURL = urlDatabase[shortURL];
+    console.log("inside longURL", longURL);
+    res.redirect(longURL);
+  }
+
 })
 
-app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
-});
+app.post("/urls", (req, res) => {
+  const shortURL = generateRandomString();
+  urlDatabase[shortURL] =  req.body.longURL;
+  res.redirect(`urls/${shortURL}`);
+})
 
-console.log(generateRandomString());
+
+
+app.listen(PORT, () => {
+  console.log(`Example app listening on port ${PORT}!`)
+});
