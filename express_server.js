@@ -38,10 +38,8 @@ app.get("/urls/:shortURL", (req, res) => {
 
 app.get("/u/:shortURL", (req, res) => {
   shortURL = req.params.shortURL;
-  console.log("longURL", urlDatabase[shortURL]);
   if(urlDatabase.hasOwnProperty(shortURL)) {
     let longURL = urlDatabase[shortURL];
-    console.log("inside longURL", longURL);
     res.redirect(longURL);
   }
 
@@ -59,6 +57,19 @@ app.post("/urls/:shortURL/delete", (req, res) => {
     delete urlDatabase[shortURL];
     res.redirect("/urls");
   }
+})
+
+app.post("/urls/:shortURL/update", (req, res) => {
+  const shortURL = req.params.shortURL;
+  if (urlDatabase.hasOwnProperty(shortURL)) {
+    res.redirect(`/urls/${shortURL}`);
+  }
+})
+
+app.post("/urls/:shortURL", (req, res) => {
+  const shortURL = req.params.shortURL;
+  urlDatabase[shortURL] = req.body.longURL;
+  res.redirect("/urls");
 })
 
 app.listen(PORT, () => {

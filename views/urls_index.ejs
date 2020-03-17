@@ -26,9 +26,13 @@
               <td><%= url %></td>
               <td><%= urls[url] %></td> 
               <td>
-                <% const action = `/urls/${url}/delete` %>
-                <form method="POST" action= <%= action %> >
+                <% const del = `/urls/${url}/delete` %>
+                <% const upd = `/urls/${url}/update` %>
+                <form method="POST" action= <%= del %> >
                   <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+                <form method="POST" action= <%= upd %> >
+                  <button type="submit" class="btn btn-info">Edit</button>
                 </form>
               </td>   
             </tr>
