@@ -55,7 +55,7 @@ app.get("/u/:shortURL", (req, res) => {
   };
 });
 
-app.get("/urls/form", (req, res) => {
+app.get("/urls/register", (req, res) => {
   res.render("urls_form");
 })
 
