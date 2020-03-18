@@ -29,10 +29,13 @@ let users = {"QTVpp9": {
   password: "dishwasher-funk"
 }};
 
-const isEmailExists = (email) => {
+const emailLookUp = (email) => {
   for (let user in users) {
+    // console.log('users[user].email', users[user].email)
+    // console.log("email is", email)
     if(users[user].email === email) {
-      return true;  
+      // console.log(users[user])
+      return users[user]; 
     } 
   }
 };
@@ -80,6 +83,13 @@ app.get("/register", (req, res) => {
   res.render("urls_form", templateVars);
 })
 
+app.get("/login", (req, res) => {
+  const { user_id } = req.cookies;
+  const user = users[user_id]
+  let templateVars = {user}
+  res.render("urls_login", templateVars);
+})
+
 app.post("/urls", (req, res) => {
   const shortURL = generateRandomString();
   urlDatabase[shortURL] =  req.body.longURL;
@@ -108,8 +118,17 @@ app.post("/urls/:shortURL", (req, res) => {
 })
 
 app.post("/login", (req, res) => {
-  res.cookie("username", req.body.username);
-  res.redirect("/urls");
+  const { email, password } = req.body;
+  const existingData = emailLookUp(email);
+  console.log(email);
+  if(!existingData) {
+    res.sendStatus(403);
+  } else if(existingData.password !== password) {
+    res.sendStatus(403);
+  } else {
+    res.cookie("user_id", existingData.id);
+    res.redirect("/urls");
+  }
 })
 
 app.post("/logout", (req, res) => {
@@ -122,7 +141,7 @@ app.post("/register", (req, res) => {
   const { email, password } = req.body;
   if(email === '' || password === '') {
     res.send("Error 400");
-  } else if (isEmailExists(email)) {
+  } else if (emailLookUp(email)) {
     res.send("Error 400");
   } else {
     users[id] = {id, email, password};

@@ -8,20 +8,18 @@
       <div class="navbar-nav">
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
-        <a class="nav-item nav-link" href="/register">Register</a>
-      </div>
-        <% if (user && user.email) { %>
-              <div>Logged in as: <%= user.email %></div>
-              <form action="/logout" method="POST">
-                <button type="submit" class="btn btn-outline-dark">Logout</button>
-              </form>
-        <% } else { %>
-        <form action="/login" method="POST">
-          <input type="text" class="form-control" name="username" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
-          <button type="submit" class="btn btn-outline-dark">Login</button>
-        </form>
-        <% } %>
       </div>
     </div>
+    <% if (user && user.email) { %>
+      <div>Logged in as: <%= user.email %></div>
+      <form action="/logout" method="POST">
+        <button type="submit" class="btn btn-outline-dark">Logout</button>
+      </form>
+    <% } else { %>
+      <div class="navbar-nav">
+        <a class="nav-item nav-link" href="/login">Login</a>
+        <a class="nav-item nav-link" href="/register">Register</a>
+      </div>
+    <% } %>
   </nav>
 </header>
