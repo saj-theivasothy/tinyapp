@@ -55,8 +55,11 @@ app.get("/u/:shortURL", (req, res) => {
   };
 });
 
-app.get("/urls/register", (req, res) => {
-  res.render("urls_form");
+app.get("/register", (req, res) => {
+  let templateVars = {
+    username: req.cookies["username"]
+  };
+  res.render("urls_form", templateVars);
 })
 
 app.post("/urls", (req, res) => {
