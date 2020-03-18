@@ -23,25 +23,43 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+let users = {"QTVpp9": {
+  id: "QTVpp9", 
+  email: "user2@example.com", 
+  password: "dishwasher-funk"
+}};
+
+const isEmailExists = (email) => {
+  for (let user in users) {
+    if(users[user].email === email) {
+      return true;  
+    } 
+  }
+};
+
 app.get("/urls", (req, res) => {
+  const { user_id } = req.cookies;
+  const user = users[user_id]
   let templateVars = {
-    username: req.cookies["username"],
+    user,
     urls: urlDatabase
   };
   res.render("urls_index", templateVars)
 });
 
 app.get("/urls/new", (req, res) => {
-  let templateVars = {
-    username: req.cookies["username"]
-  };
+  const { user_id } = req.cookies;
+  const user = users[user_id];
+  let templateVars = { user };
   res.render("urls_new", templateVars);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
+  const { user_id } = req.cookies;
+  const user = users[user_id];
   let templateVars = {
-    username: req.cookies["username"],
+    user,
     shortURL, LongURL: urlDatabase[shortURL]
   };
   res.render("urls_show", templateVars);
@@ -56,9 +74,9 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-  let templateVars = {
-    username: req.cookies["username"]
-  };
+  const { user_id } = req.cookies;
+  const user = users[user_id]
+  let templateVars = {user};
   res.render("urls_form", templateVars);
 })
 
@@ -95,8 +113,22 @@ app.post("/login", (req, res) => {
 })
 
 app.post("/logout", (req, res) => {
-  res.clearCookie("username");
+  res.clearCookie("user_id");
   res.redirect("/urls");
+})
+
+app.post("/register", (req, res) => {
+  const id = generateRandomString();
+  const { email, password } = req.body;
+  if(email === '' || password === '') {
+    res.send("Error 400");
+  } else if (isEmailExists(email)) {
+    res.send("Error 400");
+  } else {
+    users[id] = {id, email, password};
+    res.cookie("user_id", id);
+    res.redirect("/urls");
+  }
 })
 
 app.listen(PORT, () => {
