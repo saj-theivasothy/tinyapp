@@ -55,6 +55,10 @@ app.get("/u/:shortURL", (req, res) => {
   };
 });
 
+app.get("/urls/form", (req, res) => {
+  res.render("urls_form");
+})
+
 app.post("/urls", (req, res) => {
   const shortURL = generateRandomString();
   urlDatabase[shortURL] =  req.body.longURL;
