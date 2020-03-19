@@ -31,10 +31,7 @@ let users = {"QTVpp9": {
 
 const emailLookUp = (email) => {
   for (let user in users) {
-    // console.log('users[user].email', users[user].email)
-    // console.log("email is", email)
     if(users[user].email === email) {
-      // console.log(users[user])
       return users[user]; 
     } 
   }
@@ -120,7 +117,6 @@ app.post("/urls/:shortURL", (req, res) => {
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
   const existingData = emailLookUp(email);
-  console.log(email);
   if(!existingData) {
     res.sendStatus(403);
   } else if(existingData.password !== password) {
@@ -151,5 +147,5 @@ app.post("/register", (req, res) => {
 })
 
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`)
+  console.log(`App listening on port ${PORT}!`)
 });
