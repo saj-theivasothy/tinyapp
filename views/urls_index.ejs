@@ -24,7 +24,7 @@
           <% for(let url in urls) {%>
             <tr>
               <td><%= url %></td>
-              <td><%= urls[url] %></td> 
+              <td><%= urls[url].longURL %></td> 
               <td>
                 <% const del = `/urls/${url}/delete` %>
                 <% const upd = `/urls/${url}/update` %>
