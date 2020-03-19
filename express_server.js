@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
+const bcrypt = require('bcrypt');
 const app = express();
 const PORT = 3000;
 
@@ -18,16 +19,9 @@ const generateRandomString = () => {
   return result;
 };
 
-const urlDatabase = {
-  "b2xVn2": { longURL: "http://www.lighthouselabs.ca", userID: "QTVpp9"},
-  "9sm5xK": { longURL: "http://www.google.com", userID: "QTVpp9" }
-};
+const urlDatabase = {};
 
-let users = {"QTVpp9": {
-  id: "QTVpp9",
-  email: "user2@example.com",
-  password: "dishwasher-funk"
-}};
+let users = {};
 
 const emailLookUp = (email) => {
   for (let user in users) {
@@ -147,9 +141,10 @@ app.post("/urls/:shortURL", (req, res) => {
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
   const existingData = emailLookUp(email);
+  console.log(bcrypt.compareSync(password, existingData.hashedPassword));
   if (!existingData) {
     res.sendStatus(403);
-  } else if (existingData.password !== password) {
+  } else if (!bcrypt.compareSync(password, existingData.hashedPassword)) {
     res.sendStatus(403);
   } else {
     res.cookie("user_id", existingData.id);
@@ -165,12 +160,14 @@ app.post("/logout", (req, res) => {
 app.post("/register", (req, res) => {
   const id = generateRandomString();
   const { email, password } = req.body;
+  const hashedPassword = bcrypt.hashSync(password, 10);
   if (email === '' || password === '') {
     res.send("Error 400");
   } else if (emailLookUp(email)) {
     res.send("Error 400");
   } else {
-    users[id] = {id, email, password};
+    users[id] = {id, email, hashedPassword};
+    console.log(users);
     res.cookie("user_id", id);
     res.redirect("/urls");
   }
