@@ -8,7 +8,7 @@ const generateRandomString = () => {
   return result;
 };
 
-const getUsersByEmail = (email, database) => {
+const getUserByEmail = (email, database) => {
   for (let user in database) {
     if (database[user].email === email) {
       return database[user];
@@ -24,7 +24,7 @@ const isLoggedIn = (userId, database) => {
   }
 };
 
-const urlsForUser = (id, database) => {
+const getUserUrls = (id, database) => {
   const userUrlsDatabase = {};
   for (let url in database) {
     if (database[url].userId === id) {
@@ -34,4 +34,4 @@ const urlsForUser = (id, database) => {
   return userUrlsDatabase;
 };
 
-module.exports = { getUsersByEmail, isLoggedIn, urlsForUser, generateRandomString };
+module.exports = { getUserByEmail, isLoggedIn, getUserUrls, generateRandomString };

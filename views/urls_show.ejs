@@ -3,38 +3,33 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <!-- Bootstrap CSS-->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <title>URL - TinyApp Example</title>
   </head>
-
   <body>
     <%- include('partials/_header') %>
-    <div class="card text-center">
-      <div class="card-header"></div>
-      <div class="card-body">
-        <% if(userUrlsDatabase[shortURL]) { %>
-          <h5 class="card-title">TinyURL for: <%= userUrlsDatabase[shortURL].longURL %></h5>
-          <p class="card-text">Short URL: <a href="/u/<%= shortURL %>"><%= shortURL %></a></p>
-        </div>
-      <div class="card-footer text-muted">
+    <main style="margin: 1em;">
+      <div class="card text-center">
+        <div class="card-header"></div>
         <div class="card-body">
-          <h2 class="card-title">Edit</h2>
-          <p class="card-text">
+          <% if(userUrlsDb[shortURL]) { %>
+            <h2 class="card-title">TinyURL for: <%= userUrlsDb[shortURL].longURL %></h2>
+            <p class="card-text">Short URL: <a href="/u/<%= shortURL %>"><%= shortURL %></a></p>
+        </div>
+            <div class="card-footer text-muted"></div>
+            <h2 class="card-title">Edit</h2>
             <% const editURL = `/urls/${shortURL}` %>
             <form method="POST" action= <%= editURL %>>
               New URL: <input type="text" placeholder="http://" name="longURL">
               <button type="submit" class="btn btn-primary">Submit</button>
             </form>
-          </p>
-        <% }else { %>
-          <h5 class="card-title">Invalid User</h5>
-          <p class="card-text">You do not have access to this URL! Please log in with the correct account or register to create and access your links.
-        <% } %>
+          <% }else { %>
+            <h5 class="card-title">Invalid User</h5>
+            <p class="card-text">You do not have access to this URL! Please log in with the correct account or register to create and access your links.
+          <% } %>
       </div>
-    </div>
-    </div>
+    </main>
     <!-- Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
