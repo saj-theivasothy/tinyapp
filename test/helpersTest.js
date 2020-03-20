@@ -6,7 +6,7 @@ const testUsers = {
   "userRandomID": {
     id: "userRandomID", 
     email: "user@example.com", 
-  hashedPassword: bcrypt.hashSync('purple-monkey-dinosaur', 10)
+    hashedPassword: bcrypt.hashSync('purple-monkey-dinosaur', 10)
   },
   "user2RandomID": {
     id: "user2RandomID", 
