@@ -40,6 +40,9 @@ let usersDb = {'FDG43s': {
 }
 };
 
+/**
+ * Routes for rendering pages
+ */
 app.get('/urls', (req, res) => {
   const { user_id } = req.session;
   const user = usersDb[user_id];
@@ -78,26 +81,21 @@ app.get('/u/:shortURL', (req, res) => {
   }
 });
 
-app.get('/register', (req, res) => {
-  const { user_id } = req.session;
-  const user = usersDb[user_id];
-  let templateVars = {user};
-  res.render('urls_form', templateVars);
-});
-
-app.get('/login', (req, res) => {
-  const { user_id } = req.session;
-  const user = usersDb[user_id];
-  let templateVars = {user};
-  res.render('urls_login', templateVars);
-});
-
+/**
+ * Route handles creation of new URL
+ */
 app.post('/urls', (req, res) => {
   const shortURL = generateRandomString();
   urlDb[shortURL] =  { longURL: req.body.longURL, userId: req.session.user_id };
   res.redirect(`urls/${shortURL}`);
 });
 
+/**
+ * Urls edit/delete routes
+ * 
+ * POST requests for editing URLs
+ * POST requests for deleting URLs
+ */
 app.post('/urls/:shortURL/delete', (req, res) => {
   const shortURL = req.params.shortURL;
   const userUrlsDb = getUserUrls(req.session.user_id, urlDb);
@@ -129,6 +127,20 @@ app.post('/urls/:shortURL', (req, res) => {
   res.redirect('/urls');
 });
 
+/**  
+ * User registration/login routes
+ * 
+ * handles login requests
+ * handles registration requests
+ * handles logout requests
+*/
+app.get('/login', (req, res) => {
+  const { user_id } = req.session;
+  const user = usersDb[user_id];
+  let templateVars = {user};
+  res.render('urls_login', templateVars);
+});
+
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
   const user = getUserByEmail(email, usersDb);
@@ -145,6 +157,13 @@ app.post('/logout', (req, res) => {
   res.redirect('/urls');
 });
 
+app.get('/register', (req, res) => {
+  const { user_id } = req.session;
+  const user = usersDb[user_id];
+  let templateVars = {user};
+  res.render('urls_form', templateVars);
+});
+
 app.post('/register', (req, res) => {
   const id = generateRandomString();
   const { email, password } = req.body;
@@ -158,6 +177,7 @@ app.post('/register', (req, res) => {
   }
 });
 
+// Server listening for requests
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}!`);
 });
