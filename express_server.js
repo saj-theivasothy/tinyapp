@@ -6,7 +6,10 @@ const {
   getUserByEmail,
   isLoggedIn,
   getUserUrls,
-  generateRandomString } = require('./helpers');
+  generateRandomString,
+  checkPasswords,
+  validateRegistration
+} = require('./helpers');
 
 const app = express();
 const PORT = 3000;
@@ -38,8 +41,9 @@ app.get('/urls', (req, res) => {
 app.get('/urls/new', (req, res) => {
   const { user_id } = req.session;
   const user = usersDb[user_id];
-  let templateVars = { user };
-  isLoggedIn(user_id, usersDb) ? res.render('urls_new', templateVars) : res.redirect('/login');
+  const templateVars = { user };
+  const loggedIn = isLoggedIn(user_id, usersDb);
+  loggedIn ? res.render('urls_new', templateVars) : res.redirect('/login');
 });
 
 app.get('/urls/:shortURL', (req, res) => {
@@ -73,7 +77,7 @@ app.post('/urls', (req, res) => {
 
 /**
  * Urls edit/delete routes
- * 
+ *
  * POST requests for editing URLs
  * POST requests for deleting URLs
  */
@@ -91,11 +95,7 @@ app.post('/urls/:shortURL/delete', (req, res) => {
 app.post('/urls/:shortURL/update', (req, res) => {
   const shortURL = req.params.shortURL;
   const userUrlsDb = getUserUrls(req.session.user_id, urlDb);
-  if (shortURL in userUrlsDb) {
-    res.redirect(`/urls/${shortURL}`);
-  } else {
-    res.redirect('/urls');
-  }
+  (shortURL in userUrlsDb) ? res.redirect(`/urls/${shortURL}`) : res.redirect('/urls');
 });
 
 app.post('/urls/:shortURL', (req, res) => {
@@ -103,14 +103,15 @@ app.post('/urls/:shortURL', (req, res) => {
   const userUrlsDb = getUserUrls(req.session.user_id, urlDb);
   if (!userUrlsDb[shortURL]) {
     res.redirect('/urls');
+  } else {
+    urlDb[shortURL].longURL = req.body.longURL;
+    res.redirect('/urls');
   }
-  urlDb[shortURL].longURL = req.body.longURL;
-  res.redirect('/urls');
 });
 
-/**  
+/**
  * User registration/login routes
- * 
+ *
  * handles login requests
  * handles registration requests
  * handles logout requests
@@ -124,12 +125,13 @@ app.get('/login', (req, res) => {
 
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
-  const user = getUserByEmail(email, usersDb);
-  if (user && bcrypt.compareSync(password, user.hashedPassword)) {
-    req.session.user_id = user.id;
+  const userFound = getUserByEmail(email, usersDb);
+  const error = 'Error 403: Please check your email and password and try again';
+  if (userFound && checkPasswords(password, userFound)) {
+    req.session.user_id = userFound.id;
     res.redirect('/urls');
   } else {
-    res.send('Error 403: Please check your email and password and try again');
+    res.send(error);
   }
 });
 
@@ -149,12 +151,14 @@ app.post('/register', (req, res) => {
   const id = generateRandomString();
   const { email, password } = req.body;
   const hashedPassword = bcrypt.hashSync(password, 10);
-  if (email === '' || password === '' || getUserByEmail(email, usersDb)) {
-    res.send('Error 400: Please check the details you entered and try again!');
-  } else {
+  const user = getUserByEmail(email, usersDb);
+  const validRegistration = validateRegistration(email, password, user);
+  if (validRegistration) {
     usersDb[id] = {id, email, hashedPassword};
     req.session.user_id = id;
     res.redirect('/urls');
+  } else {
+    res.send('Error 400: Please check the details you entered and try again!');
   }
 });
 

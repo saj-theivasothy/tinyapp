@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+
 const generateRandomString = () => {
   let result           = '';
   let characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -34,4 +36,12 @@ const getUserUrls = (id, database) => {
   return userUrlsDatabase;
 };
 
-module.exports = { getUserByEmail, isLoggedIn, getUserUrls, generateRandomString };
+const checkPasswords = (password, user) => {
+  return bcrypt.compareSync(password, user.hashedPassword);
+};
+
+const validateRegistration = (email, password, user) => {
+  return (email !== '' && password !== '' && !user) ? true : false;
+};
+
+module.exports = { getUserByEmail, isLoggedIn, getUserUrls, generateRandomString,checkPasswords, validateRegistration };
