@@ -9,8 +9,9 @@ TinyApp allows users to shorten any URLs (à la bit.ly). The full stack web appl
 
 ## Final Product
 
-!["screenshot description"](#)
-!["screenshot description"](#)
+!["screenshot of URLs page"](https://github.com/sajinthan1994/tinyapp/blob/master/docs/TineApp-index-page.png?raw=true)
+!["screenshot register page"](https://github.com/sajinthan1994/tinyapp/blob/master/docs/TinyApp-register-page.png?raw=true)
+!["screenshot edit URL page"](https://github.com/sajinthan1994/tinyapp/blob/master/docs/TinyApp-edit-page.png?raw=true)
 
 ## Dependencies
 
