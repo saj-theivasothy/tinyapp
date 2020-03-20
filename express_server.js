@@ -18,27 +18,8 @@ app.use(cookieSession({
   keys: ['user_id']
 }));
 
-const urlDb = {
-  'JSer45': {
-    longURL: 'http://www.google.com',
-    userId: 'FDG43s'
-  },
-  'LrDvGs': {
-    longURL: 'http://www.facebook.com',
-    userId: 'FDG43s'
-  },
-  'QBJd42': {
-    longURL: 'http://www.gmail.com',
-    userId: 'FDG43s'
-  }
-};
-
-let usersDb = {'FDG43s': {
-  id: 'FDG43s',
-  email: 'saj@example.com',
-  hashedPassword: bcrypt.hashSync('1234', 10)
-}
-};
+const urlDb = {};
+let usersDb = {};
 
 /**
  * Routes for rendering pages
